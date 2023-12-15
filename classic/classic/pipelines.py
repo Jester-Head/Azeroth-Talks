@@ -30,9 +30,9 @@ class ClassicPipeline:
         """
         return cls(
             mongo_uri=crawler.settings.get("MONGO_URI"),
-            mongo_db=crawler.settings.get("MONGO_DATABASE", "wow_classic"),
+            mongo_db=crawler.settings.get("MONGO_DATABASE", "wow_test"),
             mongo_coll=crawler.settings.get(
-                "MONGO_COLL_FORUMS", "forums_sod"),
+                "MONGO_COLL_FORUMS", "classic_forums"),
         )
 
     def open_spider(self, spider):

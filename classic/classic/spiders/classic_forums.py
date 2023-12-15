@@ -1,7 +1,8 @@
 import scrapy
 from scrapy.linkextractors import LinkExtractor
 from scrapy.spiders import CrawlSpider, Rule
-from classic.items import SoDItem
+
+from classic.items import WowClassicItem
 
 
 class SodForumsSpider(CrawlSpider):
@@ -23,7 +24,7 @@ class SodForumsSpider(CrawlSpider):
         title = response.xpath('//h1/a/text()').extract_first()
 
         for comment in comments:
-            item = SoDItem()
+            item = WowClassicItem()
             item['topic'] = title
             item['forum'] = response.xpath(
                 '//*[@id="topic-title"]/div/span[2]/a/span[2]/span/text()').extract_first()
