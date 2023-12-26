@@ -5,7 +5,7 @@ from scrapy.spiders import CrawlSpider, Rule
 from classic.items import WowClassicItem
 
 
-class SodForumsSpider(CrawlSpider):
+class ClassicForumsSpider(CrawlSpider):
     name = 'forums_classic'
     allowed_domains = ['us.forums.blizzard.com']
     start_urls = [
@@ -24,12 +24,16 @@ class SodForumsSpider(CrawlSpider):
         title = response.xpath('//h1/a/text()').extract_first()
         forum = response.xpath('//*[@id="topic-title"]/div/span[2]/a/span[2]/span/text()').extract_first()
 
+        if forum == "WoW Classic New Guild Listings":
+            return
+
         for comment in comments:
             item = WowClassicItem()
             item['topic'] = title
             item['forum'] = forum  
             item['comment'] = {
-                'text':' '.join(comment.xpath('.//p/text()').extract()),
+                'text_segments': comment.xpath('.//p/text()').extract(),  # Storing text in an array
+                'quotes': comment.xpath('.//blockquote/p/text()').extract(),
                 'likes':comments.xpath('//span[contains(text(),\'Likes\')]/text()').extract_first(),
                 'date':comments.xpath('//span[@class="crawler-post-infos"]/time[@itemprop="datePublished"]/@datetime').extract_first()
             }
