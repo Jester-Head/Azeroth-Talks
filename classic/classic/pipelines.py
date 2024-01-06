@@ -37,17 +37,18 @@ class ClassicPipeline:
 
     def open_spider(self, spider):
         """
-        Establish a connection to MongoDB when the spider is opened and set up the necessary indexes.
+        Establish a connection to MongoDB when the spider is opened. It sets up the necessary indexes
+        to ensure efficient querying and prevent duplicates.
 
         Parameters:
             spider (Spider): The Scrapy Spider instance that is being run.
         """
-        self.client = pymongo.MongoClient(self.mongo_uri)
-        self.db = self.client[self.mongo_db]
-        self.collection = self.db[self.mongo_coll]
-
         try:
-            # Create a unique compound index
+            self.client = pymongo.MongoClient(self.mongo_uri)
+            self.db = self.client[self.mongo_db]
+            self.collection = self.db[self.mongo_coll]
+
+            # Creating a unique compound index for efficient querying and to avoid duplicate entries.
             self.collection.create_index([
                 ("topic", 1),
                 ("comment", 1),
@@ -56,8 +57,10 @@ class ClassicPipeline:
                 ("date", 1)
             ], unique=True)
         except errors.OperationFailure as e:
-            spider.logger.error(f"Error creating index: {e}")
-
+            spider.logger.error(
+                f"Error creating index or connecting to MongoDB: {e}")
+        except Exception as e:
+            spider.logger.error(f"Unexpected error: {e}")
 
     def close_spider(self, spider):
         """
@@ -71,7 +74,7 @@ class ClassicPipeline:
     def process_item(self, item, spider):
         """
         Process an item by inserting it into the MongoDB collection. If a duplicate item is detected, 
-        it's logged and skipped.
+        it's logged as an error and skipped.
 
         Parameters:
             item (Item): The item scraped by the spider.
@@ -84,7 +87,6 @@ class ClassicPipeline:
             item_dict = ItemAdapter(item).asdict()
             self.collection.insert_one(item_dict)
         except errors.DuplicateKeyError:
-            item_dict = ItemAdapter(item).asdict()
-            spider.logger.info("Duplicate item found: %s", item_dict)
+            spider.logger.error("Duplicate item found: %s", item_dict)
             pass
         return item
