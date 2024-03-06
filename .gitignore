@@ -5,3 +5,4 @@ settings.py
 config.py
 connection.py
 classic/data
+.vscode/settings.json
