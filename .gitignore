@@ -1,7 +1,12 @@
 classic/sod/settings.py
 scrapy.cfg
 classic/utilities/info.log
-settings.py
+settings.json
 config.py
 connection.py
 classic/data
+notebooks/Chat_Logs
+classic/notebooks/style
+classic/notebooks/all_posts_2023
+scrapy.cfg
+classic/utilities/info_2024_03.log
