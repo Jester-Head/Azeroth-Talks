@@ -1,7 +1,7 @@
 classic/sod/settings.py
 scrapy.cfg
 classic/utilities/info.log
-settings.py
+settings.json
 config.py
 connection.py
 classic/data

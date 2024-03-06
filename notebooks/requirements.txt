@@ -1,0 +1,13 @@
+numpy
+pandas
+contractions
+emoji
+ftfy
+nltk
+spacy
+textstat
+pyspellchecker
+matplotlib
+Pillow
+seaborn
+scikit-learn
